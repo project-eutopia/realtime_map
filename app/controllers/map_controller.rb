@@ -12,7 +12,16 @@ class MapController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.xml { render :xml => @people.to_xml }
     end
+  end
+  
+  def query
+    @purchases = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
+                                      limit: MAX_NUMBER_OF_PURCHASES_PER_CALL)
+    
+    respond_to do |format|
+      format.json { render :json => @purchases.to_json }
+    end
+
   end
 end

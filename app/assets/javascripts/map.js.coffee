@@ -4,7 +4,5 @@
 
 # Load the map once the window is done loading by calling controller
 window.onload = ->
-  window.box = new @MapBox
-  window.box.loadMap("map-canvas")
-  window.box.add_markers(window.purchases_json)
-  window.box.drawing_loop(20)
+  window.box = new @MapBox("map-canvas", window.purchases_json, 20)
+  

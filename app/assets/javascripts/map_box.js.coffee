@@ -2,9 +2,19 @@
 # for displaying on the map, and the loop that updates the map and the database
 # check
 class @MapBox
-  constructor: ->
+  constructor: (div_id, initial_json, fps) ->
     @markers = {}
     @map = null
+    
+    @loadMap(div_id)
+    @add_markers(initial_json)
+    
+    callback = @get_recent_purchases.bind(@)
+    setInterval ( ->
+      callback.call()
+    ), 5000
+    
+    @drawing_loop(fps)
   
   # Loads the Google map
   loadMap: (div_id) ->
@@ -16,7 +26,7 @@ class @MapBox
 
     # Build the map
     @map = new google.maps.Map(document.getElementById(div_id), mapOptions)
-
+    
 
   # Adds markers specified by the JSON into the @markers hash
   add_markers: (json) ->
@@ -28,18 +38,18 @@ class @MapBox
   
   
   # This is the drawing loop that calls update on all the markers
-  drawing_loop: (fps) =>
+  drawing_loop: (fps) ->
     @update_markers()
     
     callback = @drawing_loop.bind(@, fps)
-    setTimeout (->
+    setTimeout ( ->
       callback.call()
     ), 1000 / fps
     
     
   # Loops through all active markers and updates each's animation,
   # cleaning up finished markers at the end
-  update_markers: =>
+  update_markers: ->
     # Record any markers that have finished animating for removal
     finished_markers_keys = []
     
@@ -53,14 +63,15 @@ class @MapBox
       console.log("Removed marker with key = " + key)
       
 
-  database_get_new: ->
+  get_recent_purchases: ->
 
-    #$.ajax "/map/database_get_new",
-    #  type: "POST"
-    #  data:
-    #    last_query: @last_query_time
-    #  success: ->
-    #    alert
-    #  error: ->
-    #    # This AJAX call... we should have validation of user to be able to call
-    #    console.log("Error calling /map/database_get_new")
+    $.ajax "/map/index",
+      type: "POST"
+      success: (data, status, xhr) =>
+        console.log("AJAX, received new JSON data")
+        @add_markers(data)
+      error: (xhr, status, error) =>
+        console.log(xhr)
+        alert(error)
+      #data:
+      #  #last_query: @last_query_time

@@ -30,9 +30,17 @@ class @MapBox
     requestAnimationFrame(@drawing_loop)
     
   update: =>
+    # Record any markers that have finished animating for removal
+    finished_markers_keys = []
+    
     for key, marker of @markers
       do (key) ->
-        marker.update()
+        if marker.update() == true
+          finished_markers_keys.push(key)
+    
+    # Remove markers that have finished after the update loop
+    for key in finished_markers_keys
+      delete @markers[key]
       
 
   database_get_new: ->

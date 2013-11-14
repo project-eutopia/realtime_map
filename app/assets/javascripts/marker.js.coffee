@@ -5,7 +5,7 @@ class @Marker
   
   constructor: (lat, lng, radius, color, map) ->
     @create_time = Date.now()
-    @finish_time = @create_time + @lifetime_ms_default
+    @finish_time = @create_time + Marker.lifetime_ms_default
     
     @active = true
     @radius = radius
@@ -35,19 +35,19 @@ class @Marker
   update: ->
     ms_passed = Date.now() - @create_time
       
-    if @active == true or ms_passed > @lifetime_ms_default
+    if @active == false or ms_passed > Marker.lifetime_ms_default
       @active = false
       return true
     else
       # Note, it looks nicer when the lighter fill color completely fades out first,
       # before the circle outline does
-      @googleMarker.setIcon(
+      @google_marker.setIcon(
         path: google.maps.SymbolPath.CIRCLE
         strokeWeight: 2
         strokeColor: @color
-        strokeOpacity: Marker.initStrokeOpacity * (@lifetime_ms_default - ms_passed) / @lifetime_ms_default
+        strokeOpacity: Marker.initStrokeOpacity * (Marker.lifetime_ms_default - ms_passed) / Marker.lifetime_ms_default
         fillColor: @color
-        fillOpacity: Marker.initFillOpacity * Math.max(@lifetime_ms_default - 1.4*ms_passed, 0) / @lifetime_ms_default
+        fillOpacity: Marker.initFillOpacity * Math.max(Marker.lifetime_ms_default - 1.4*ms_passed, 0) / Marker.lifetime_ms_default
         scale: @radius
       )
       

@@ -6,6 +6,7 @@ class @MapBox
     @markers = {}
     @map = null
   
+  # Loads the Google map
   loadMap: (div_id) ->
 
     mapOptions =
@@ -16,25 +17,23 @@ class @MapBox
     # Build the map
     @map = new google.maps.Map(document.getElementById(div_id), mapOptions)
 
-
-  
+  # Adds markers specified by the JSON into the @markers hash
   add_markers: (json) ->
     if @map != null
       for marker_json in json
         @markers[marker_json.id] = new Marker(marker_json.lat, marker_json.lng, marker_json.price, "#FF0000", @map)
     console.log(@markers)
+  
+  # This is the drawing loop that calls update on all the markers
+  drawing_loop: =>
+    @update()
+    requestAnimationFrame(@drawing_loop)
     
-  update: ->
-    #console.log(@markers.size()) # Check that we are really removing markers
-    #if @okay_to_update()
-    #  marker_node = @markers.head
-    #  while marker_node isnt null
-    #    if marker_node.obj.update() == true
-    #      # Set the map to NULL and remove from our LinkedList to ensure this
-    #      # finished marker will be garbage collected
-    #      marker_node.obj.googleMarker.setMap(null)
-    #      @markers.remove(marker_node)
-    #    marker_node = marker_node.next
+  update: =>
+    for key, marker of @markers
+      do (key) ->
+        marker.update()
+      
 
   database_get_new: ->
 

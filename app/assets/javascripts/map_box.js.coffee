@@ -21,7 +21,8 @@ class @MapBox
   add_markers: (json) ->
     if @map != null
       for marker_json in json
-        @markers['#{marker_json.id}'] = new Marker(marker_json.lat, marker_json.lng, marker_json.price, "#FF0000", @map)
+        @markers[marker_json.id] = new Marker(marker_json.lat, marker_json.lng, marker_json.price, "#FF0000", @map)
+    console.log(@markers)
     
   update: ->
     #console.log(@markers.size()) # Check that we are really removing markers

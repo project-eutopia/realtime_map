@@ -7,7 +7,7 @@ class @MapBox
     @map = null
     
     @loadMap(div_id)
-    @add_markers(initial_json)
+    @add_markers(initial_json["markers"])
     
     callback = @get_recent_purchases.bind(@)
     setInterval ( ->
@@ -69,7 +69,7 @@ class @MapBox
       type: "POST"
       success: (data, status, xhr) =>
         console.log("AJAX, received new JSON data")
-        @add_markers(data)
+        @add_markers(data["markers"])
       error: (xhr, status, error) =>
         console.log(xhr)
         alert(error)

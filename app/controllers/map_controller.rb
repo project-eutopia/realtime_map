@@ -6,6 +6,7 @@ class MapController < ApplicationController
   
   MAX_NUMBER_OF_PURCHASES_PER_CALL = 100
   
+  # map/index GET
   def index
     @query_time = Time.now()
     @purchases = Purchase.recent(seconds: FIRST_QUERY_LENGTH_IN_SECONDS,
@@ -17,7 +18,9 @@ class MapController < ApplicationController
     end
   end
   
+  # map/index POST
   def query
+    # Time of previous query is: params[:last_query]
     @query_time = Time.now()
     @purchases = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
                                       limit: MAX_NUMBER_OF_PURCHASES_PER_CALL)

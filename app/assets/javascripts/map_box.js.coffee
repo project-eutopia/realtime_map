@@ -70,8 +70,10 @@ class @MapBox
       success: (data, status, xhr) =>
         console.log("AJAX, received new JSON data")
         @add_markers(data["markers"])
+        @last_query_time = data["query_time"]
+        console.log(@last_query_time)
       error: (xhr, status, error) =>
         console.log(xhr)
         alert(error)
-      #data:
-      #  #last_query: @last_query_time
+      data:
+        last_query: @last_query_time

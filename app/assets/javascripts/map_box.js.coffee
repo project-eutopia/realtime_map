@@ -17,30 +17,40 @@ class @MapBox
     # Build the map
     @map = new google.maps.Map(document.getElementById(div_id), mapOptions)
 
+
   # Adds markers specified by the JSON into the @markers hash
   add_markers: (json) ->
     if @map != null
       for marker_json in json
         @markers[marker_json.id] = new Marker(marker_json.lat, marker_json.lng, marker_json.price, "#FF0000", @map)
+    console.log("Added new markers")
     console.log(@markers)
   
+  
   # This is the drawing loop that calls update on all the markers
-  drawing_loop: =>
-    @update()
-    requestAnimationFrame(@drawing_loop)
+  drawing_loop: (fps) =>
+    @update_markers()
     
-  update: =>
+    callback = @drawing_loop.bind(@, fps)
+    setTimeout (->
+      callback.call()
+    ), 1000 / fps
+    
+    
+  # Loops through all active markers and updates each's animation,
+  # cleaning up finished markers at the end
+  update_markers: =>
     # Record any markers that have finished animating for removal
     finished_markers_keys = []
     
     for key, marker of @markers
-      do (key) ->
-        if marker.update() == true
-          finished_markers_keys.push(key)
+      if marker.update() == true
+        finished_markers_keys.push(key)
     
     # Remove markers that have finished after the update loop
     for key in finished_markers_keys
       delete @markers[key]
+      console.log("Removed marker with key = " + key)
       
 
   database_get_new: ->

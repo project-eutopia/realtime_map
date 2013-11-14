@@ -26,17 +26,21 @@ class @Marker
   
   is_finished: ->
     if Date.now() > @finish_time
-      @active = false
+      @deactivate()
       return true
     else
       return false
+    
+  deactivate: ->
+    @active = false
+    @google_marker.setMap(null)
   
   # Returns true if finished, false if not
   update: ->
     ms_passed = Date.now() - @create_time
       
     if @active == false or ms_passed > Marker.lifetime_ms_default
-      @active = false
+      @deactivate()
       return true
     else
       # Note, it looks nicer when the lighter fill color completely fades out first,

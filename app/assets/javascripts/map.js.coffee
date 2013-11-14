@@ -7,4 +7,4 @@ window.onload = ->
   window.box = new @MapBox
   window.box.loadMap("map-canvas")
   window.box.add_markers(window.purchases_json)
-  window.box.drawing_loop()
+  window.box.drawing_loop(20)

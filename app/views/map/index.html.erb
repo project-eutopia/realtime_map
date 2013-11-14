@@ -4,4 +4,6 @@
   <div id="map-canvas" style='width: 1060px; height: 520px;'></div>
 </div>
 
-<%= @purchases_json %>
+<%= javascript_tag do %>
+  window.purchases_json = <%= raw @purchases.to_json() %>
+<% end %>

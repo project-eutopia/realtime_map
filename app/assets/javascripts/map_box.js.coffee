@@ -19,14 +19,9 @@ class @MapBox
 
   
   add_markers: (json) ->
-    #if @map != null and @okay_to_update()
-    #  now = new Date()
-    #  console.log("now = " + now + " vs then " + time)
-    #  
-    #  marker = new Marker(lat, lng, radius, store, color, @map)
-    #  if @store != "" and @store != null and @store != store.toString()
-    #    marker.googleMarker.setVisible(false)
-    #  @markers.add(marker)
+    if @map != null
+      for marker_json in json
+        @markers['#{marker_json.id}'] = new Marker(marker_json.lat, marker_json.lng, marker_json.price, "#FF0000", @map)
     
   update: ->
     #console.log(@markers.size()) # Check that we are really removing markers

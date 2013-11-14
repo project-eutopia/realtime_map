@@ -6,3 +6,4 @@
 window.onload = ->
   window.box = new @MapBox
   window.box.loadMap("map-canvas")
+  window.box.add_markers(window.purchases_json)

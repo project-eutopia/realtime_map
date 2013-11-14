@@ -7,8 +7,8 @@ class MapController < ApplicationController
   MAX_NUMBER_OF_PURCHASES_PER_CALL = 100
   
   def index
-    @purchases_json = Purchase.recent(seconds: FIRST_QUERY_LENGTH_IN_SECONDS,
-                                      limit: MAX_NUMBER_OF_PURCHASES_PER_CALL).to_json
+    @purchases = Purchase.recent(seconds: FIRST_QUERY_LENGTH_IN_SECONDS,
+                                      limit: MAX_NUMBER_OF_PURCHASES_PER_CALL)
 
     respond_to do |format|
       format.html

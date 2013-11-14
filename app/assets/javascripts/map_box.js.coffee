@@ -8,6 +8,7 @@ class @MapBox
     
     @loadMap(div_id)
     @add_markers(initial_json["markers"])
+    @last_query_time = initial_json["query_time"]
     
     callback = @get_recent_purchases.bind(@)
     setInterval ( ->

@@ -5,5 +5,5 @@
 </div>
 
 <%= javascript_tag do %>
-  window.purchases_json = <%= raw @purchases.to_json() %>
+  window.purchases_json = <%= raw @circle_data.to_json() %>
 <% end %>

@@ -9,7 +9,10 @@ class MapController < ApplicationController
   def index
     @purchases = Purchase.recent(seconds: FIRST_QUERY_LENGTH_IN_SECONDS,
                                       limit: MAX_NUMBER_OF_PURCHASES_PER_CALL)
-
+    @circle_data = @purchases.collect do |purchase|
+      purchase.circle_data
+    end
+    
     respond_to do |format|
       format.html
     end
@@ -18,9 +21,12 @@ class MapController < ApplicationController
   def query
     @purchases = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
                                       limit: MAX_NUMBER_OF_PURCHASES_PER_CALL)
+    @circle_data = @purchases.collect do |purchase|
+      purchase.circle_data
+    end
     
     respond_to do |format|
-      format.json { render :json => @purchases.to_json }
+      format.json { render :json => @circle_data.to_json }
     end
 
   end

@@ -3,6 +3,6 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 # Load the map once the window is done loading by calling controller
-window.onload = ->
-  window.box = new @MapBox("map-canvas", window.data_json, 20)
+$(document).ready ->
+  window.box = new window.MapBox("map-canvas", window.data_json, 15)
   

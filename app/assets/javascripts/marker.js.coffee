@@ -1,4 +1,4 @@
-class @Marker
+class window.Marker
   @initFillOpacity = 0.40
   @initStrokeOpacity = 0.85
   @lifetime_ms_default = 4500

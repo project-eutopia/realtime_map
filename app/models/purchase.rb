@@ -7,7 +7,7 @@ class Purchase < ActiveRecord::Base
   # params[limit] = maximum number of Purchases to return
   def self.recent(params)
     # Dummy data
-    (1..5).collect do |i|
+    (1..75).collect do |i|
       Purchase.new(id: rand(9999999),
                    name: "Name-#{rand(9999)}",
                    lat: rand(160)-80,

@@ -1,7 +1,7 @@
 # This class holds all the things needed in the map:  the map itself, data used
 # for displaying on the map, and the loop that updates the map and the database
 # check
-class @MapBox
+class window.MapBox
   constructor: (div_id, initial_json, fps) ->
     @markers = {}
     @map = null

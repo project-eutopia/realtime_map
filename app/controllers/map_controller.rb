@@ -9,8 +9,11 @@ class MapController < ApplicationController
   
   # map/index GET
   def index
-    session[:start_time] = Time.now()
+    # We can't get purchases from the future, so instead we have to pull
+    # elements from previous times
+    session[:start_time] = Time.now() - FIRST_QUERY_LENGTH_IN_SECONDS
     session[:query_time] = session[:start_time]
+
     @purchases = Purchase.recent(seconds: FIRST_QUERY_LENGTH_IN_SECONDS,
                                  limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
                                  start_time: session[:start_time],
@@ -26,7 +29,7 @@ class MapController < ApplicationController
   
   # map/index POST
   def query
-    session[:query_time] = Time.now()
+    session[:query_time] = Time.now() - REGULAR_QUERY_LENGTH_IN_SECONDS
     @purchases = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
                                  limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
                                  start_time: session[:start_time],

@@ -6,14 +6,14 @@ class Purchase < ActiveRecord::Base
   # This returns all Purchases received recently
   #
   # params[:start_time] = Time.now() at start of session
-  # params[:query_time] = Time.now() for the current query
+  # params[:query_time] = Time.now() for the start of the current query
   # params[:seconds] = number of seconds of recent data to pull
   # params[:limit] = maximum number of Purchases to return
   def self.recent(params)
     # Hash default values
     params.reverse_merge!( seconds: DEFAULT_QUERY_SECONDS,
                            limit: DEFAULT_MAX_RECENT_PURCHASES,
-                           session_start_time: Time.now(),
+                           start_time: Time.now(),
                            query_time: Time.now() )
     
     # Dummy data

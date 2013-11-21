@@ -32,8 +32,9 @@ class window.MapBox
   # Adds markers specified by the JSON into the @markers hash
   add_markers: (json) ->
     if @map != null
-      # Will add the markers in chunks, to keep the update loop
-      # as lean as possible
+      # Will add the markers in chunks, to keep the update loop as lean as possible.
+      # NOTE: This requires the json data to be sorted by "delay_ms",
+      #       which is handled in the MapController.
       while json.length > 0
         # Add in chunks of 10 markers
         current_chunk = json.splice(0, 10)

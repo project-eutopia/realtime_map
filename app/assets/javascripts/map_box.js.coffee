@@ -66,8 +66,8 @@ class window.MapBox
 
   get_recent_purchases: ->
 
-    $.ajax "/map/index",
-      type: "POST"
+    $.ajax "/map/query",
+      type: "GET"
       success: (data, status, xhr) =>
         console.log("AJAX, received new JSON data")
         @add_markers(data["markers"])

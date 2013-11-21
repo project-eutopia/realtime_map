@@ -3,8 +3,8 @@ class window.Marker
   @initStrokeOpacity = 0.85
   @lifetime_ms_default = 4500
   
-  constructor: (lat, lng, radius, color, map) ->
-    @create_time = Date.now()
+  constructor: (create_time, lat, lng, radius, color, map) ->
+    @create_time = create_time
     @finish_time = @create_time + Marker.lifetime_ms_default
     
     @active = true

@@ -7,6 +7,7 @@ class window.MapBox
     @map = null
     
     @loadMap(div_id)
+    @client_side_start_time = Date.now()
     @add_markers(initial_json["markers"])
     
     callback = @get_recent_purchases.bind(@)
@@ -32,7 +33,7 @@ class window.MapBox
   add_markers: (json) ->
     if @map != null
       for marker_json in json
-        @markers[marker_json.id] = new Marker(marker_json.lat, marker_json.lng, marker_json.radius, marker_json.color, @map)
+        @markers[marker_json.id] = new Marker(@client_side_start_time + marker_json.delay_ms, marker_json.lat, marker_json.lng, marker_json.radius, marker_json.color, @map)
     console.log("Added new markers")
     console.log(@markers)
   

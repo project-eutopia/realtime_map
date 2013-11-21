@@ -32,10 +32,23 @@ class window.MapBox
   # Adds markers specified by the JSON into the @markers hash
   add_markers: (json) ->
     if @map != null
-      for marker_json in json
-        @markers[marker_json.id] = new Marker(@client_side_start_time + marker_json.delay_ms, marker_json.lat, marker_json.lng, marker_json.radius, marker_json.color, @map)
-    console.log("Added new markers")
-    console.log(@markers)
+      # Will add the markers in chunks, to keep the update loop
+      # as lean as possible
+      while json.length > 0
+        # Add in chunks of 10 markers
+        current_chunk = json.splice(0, 10)
+        
+        do (current_chunk) =>
+          # Set the timeout to be 1 second before the first marker in this chunk
+          timeout_delay = Math.max(@client_side_start_time + current_chunk[0].delay_ms - Date.now() - 1000, 0)
+
+          setTimeout ( =>
+            for marker in current_chunk
+              @markers[marker.id] = new Marker(@client_side_start_time + marker.delay_ms, marker.lat, marker.lng, marker.radius, marker.color, @map)
+  
+            console.log("Added " + current_chunk.length + " new markers")
+            console.log(@markers)
+          ), timeout_delay
   
   
   # This is the drawing loop that calls update on all the markers

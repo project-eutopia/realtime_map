@@ -18,8 +18,7 @@ class MapController < ApplicationController
     
     @data = {:seconds_between_calls => REGULAR_QUERY_LENGTH_IN_SECONDS,
              :fps => DEFAULT_ANIMATION_FPS,
-             :markers => @purchases.collect {|p| p.circle_data} }
-    
+             :markers => @purchases.collect{ |p| p.circle_data }.sort_by{ |m| m[:delay_ms] } }
     respond_to do |format|
       format.html
     end
@@ -33,7 +32,7 @@ class MapController < ApplicationController
                                  start_time: session[:start_time],
                                  query_time: session[:query_time])
     
-    @data = {:markers => @purchases.collect {|p| p.circle_data} }
+    @data = {:markers => @purchases.collect{ |p| p.circle_data }.sort_by{ |m| m[:delay_ms] } }
     
     respond_to do |format|
       format.json { render :json => @data.to_json }

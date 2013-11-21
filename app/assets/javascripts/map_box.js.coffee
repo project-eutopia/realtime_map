@@ -2,7 +2,7 @@
 # for displaying on the map, and the loop that updates the map and the database
 # check
 class window.MapBox
-  constructor: (div_id, initial_json, fps) ->
+  constructor: (div_id, initial_json) ->
     @markers = {}
     @map = null
     
@@ -12,9 +12,9 @@ class window.MapBox
     callback = @get_recent_purchases.bind(@)
     setInterval ( ->
       callback.call()
-    ), 5000
+    ), initial_json["seconds_between_calls"]*1000
     
-    @drawing_loop(fps)
+    @drawing_loop(initial_json["fps"])
   
   # Loads the Google map
   loadMap: (div_id) ->

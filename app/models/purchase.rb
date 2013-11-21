@@ -11,10 +11,7 @@ class Purchase < ActiveRecord::Base
   # params[:limit] = maximum number of Purchases to return
   def self.recent(params)
     # Hash default values
-    params.reverse_merge!( seconds: DEFAULT_QUERY_SECONDS,
-                           limit: DEFAULT_MAX_RECENT_PURCHASES,
-                           start_time: Time.now(),
-                           query_time: Time.now() )
+    params.reverse_merge!( limit: DEFAULT_MAX_RECENT_PURCHASES )
     
     # Dummy data
     (1..100).collect do |i|

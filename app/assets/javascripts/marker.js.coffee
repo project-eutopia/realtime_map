@@ -23,6 +23,8 @@ class window.Marker
         fillOpacity: Marker.initFillOpacity
         scale: @radius
     )
+    # Initially the marker is invisible, until we reach the create_time
+    @google_marker.setVisible(false)
   
   is_finished: ->
     if Date.now() > @finish_time
@@ -37,12 +39,18 @@ class window.Marker
   
   # Returns true if finished, false if not
   update: ->
+    if @active == false
+      return true
+    
     ms_passed = Date.now() - @create_time
-      
-    if @active == false or ms_passed > Marker.lifetime_ms_default
+     
+    # If done animating, remove
+    if ms_passed > Marker.lifetime_ms_default
       @deactivate()
       return true
-    else
+    # If ms_passed is negative, the marker is not yet to be displayed
+    else if ms_passed >= 0
+      @google_marker.setVisible(true)
       # Note, it looks nicer when the lighter fill color completely fades out first,
       # before the circle outline does
       @google_marker.setIcon(
@@ -55,5 +63,5 @@ class window.Marker
         scale: @radius
       )
       
-      return false
+    return false
       

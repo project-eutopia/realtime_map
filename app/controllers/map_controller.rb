@@ -15,6 +15,7 @@ class MapController < ApplicationController
                                  limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
                                  start_time: session[:start_time],
                                  query_time: session[:query_time])
+    
     @data = {:seconds_between_calls => REGULAR_QUERY_LENGTH_IN_SECONDS,
              :fps => DEFAULT_ANIMATION_FPS,
              :markers => @purchases.collect {|p| p.circle_data} }
@@ -31,6 +32,7 @@ class MapController < ApplicationController
                                  limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
                                  start_time: session[:start_time],
                                  query_time: session[:query_time])
+    
     @data = {:markers => @purchases.collect {|p| p.circle_data} }
     
     respond_to do |format|

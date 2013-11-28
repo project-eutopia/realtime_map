@@ -5,4 +5,3 @@
 # Load the map once the window is done loading by calling controller
 $(document).ready ->
   window.box = new window.MapBox("map-canvas", window.data_json)
-  

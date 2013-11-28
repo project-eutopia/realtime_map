@@ -3,8 +3,8 @@ class window.Marker
   @initStrokeOpacity = 0.85
   @lifetime_ms_default = 4500
   
-  constructor: (create_time, lat, lng, radius, color, map) ->
-    @create_time = create_time
+  constructor: (lat, lng, radius, color, map, fps) ->
+    @create_time = Date.now()
     @finish_time = @create_time + Marker.lifetime_ms_default
     
     @active = true
@@ -23,11 +23,15 @@ class window.Marker
         fillOpacity: Marker.initFillOpacity
         scale: @radius
     )
-    # Initially the marker is invisible, until we reach the create_time
-    @google_marker.setVisible(false)
+
+    # Fadeout the marker
+    @fadeOutInterval = null
+    @startFadeout(fps)
   
   is_finished: ->
-    if Date.now() > @finish_time
+    if @active == false
+      return true
+    else if Date.now() > @finish_time
       @deactivate()
       return true
     else
@@ -35,7 +39,33 @@ class window.Marker
     
   deactivate: ->
     @active = false
+    unless @startFadeoutInterval is null
+      clearInterval(@startFadeoutInterval)
     @google_marker.setMap(null)
+    
+  startFadeout: (fps) ->
+    @startFadeoutInterval = setInterval ( =>
+      cur_time = Date.now()
+     
+      # If done animating, remove
+      if cur_time > @finish_time
+        @deactivate()
+        
+      # Update opacity
+      else
+        # Note, it looks nicer when the lighter fill color completely fades out first,
+        # before the circle outline does
+        @google_marker.setIcon(
+          path: google.maps.SymbolPath.CIRCLE
+          strokeWeight: 2
+          strokeColor: @color
+          strokeOpacity: Marker.initStrokeOpacity * (@finish_time - cur_time) / (@finish_time - @create_time)
+          fillColor: @color
+          fillOpacity: Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
+          scale: @radius
+        )
+    ), 1000 / fps
+
   
   # Returns true if finished, false if not
   update: ->

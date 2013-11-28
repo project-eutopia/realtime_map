@@ -27,7 +27,7 @@ class MapController < ApplicationController
     end
   end
   
-  # map/index POST
+  # map/query GET
   def query
     session[:query_time] = Time.now() - REGULAR_QUERY_LENGTH_IN_SECONDS
     @purchases = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,

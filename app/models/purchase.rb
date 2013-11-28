@@ -14,7 +14,7 @@ class Purchase < ActiveRecord::Base
     params.reverse_merge!( limit: DEFAULT_MAX_RECENT_PURCHASES )
     
     # Dummy data
-    (1..100).collect do |i|
+    (1..params[:limit]).collect do |i|
       Purchase.new(id: rand(9999999),
                    name: "Name-#{rand(9999)}",
                    session_start_time: params[:start_time],

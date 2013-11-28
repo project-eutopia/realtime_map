@@ -3,17 +3,17 @@ class window.Marker
   @initStrokeOpacity = 0.85
   @lifetime_ms_default = 4500
   
-  constructor: (id, lat, lng, radius, color, map, fps) ->
-    @id = id
+  constructor: (json, map, fps) ->
+    @id = json.id
     @create_time = Date.now()
     @finish_time = @create_time + Marker.lifetime_ms_default
     
     @active = true
-    @radius = radius
-    @color = color
+    @radius = json.radius
+    @color = json.color
     
     @google_marker = new google.maps.Marker(
-      position: new google.maps.LatLng(lat, lng)
+      position: new google.maps.LatLng(json.lat, json.lng)
       map: map
       icon:
         path: google.maps.SymbolPath.CIRCLE

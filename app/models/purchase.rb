@@ -1,14 +1,13 @@
 class Purchase < ActiveRecord::Base
   COLORS = ['#FF2222', '#DDDD00', '#00BB22', '#000099', '#6644DD']
   DEFAULT_MAX_RECENT_PURCHASES = 100
-  DEFAULT_QUERY_SECONDS = 60
   
   # This returns all Purchases received recently
   #
   # params[:start_time] = Time.now() at start of session
   # params[:query_time] = Time.now() for the start of the current query
   # params[:seconds] = number of seconds of recent data to pull
-  # params[:limit] = maximum number of Purchases to return
+  # params[:limit] = maximum number of Purchases to return (optional)
   def self.recent(params)
     # Hash default values
     params.reverse_merge!( limit: DEFAULT_MAX_RECENT_PURCHASES )

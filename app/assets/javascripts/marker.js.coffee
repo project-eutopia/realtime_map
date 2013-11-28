@@ -5,6 +5,10 @@ class window.Marker
   
   constructor: (json, map, fps) ->
     @id = json.id
+    @lat = json.lat
+    @lng = json.lng
+    @map = map
+    
     @create_time = Date.now()
     @finish_time = @create_time + Marker.lifetime_ms_default
     
@@ -13,9 +17,17 @@ class window.Marker
     @color = json.color
     @fradulent_score = json.fradulent_score
     
-    @google_marker = new google.maps.Marker(
-      position: new google.maps.LatLng(json.lat, json.lng)
-      map: map
+    @google_marker = @get_google_marker()
+
+    # Fadeout the marker
+    @fadeOutInterval = null
+    @start_animation(fps)
+    
+    
+  get_google_marker: ->
+    return new google.maps.Marker(
+      position: new google.maps.LatLng(@lat, @lng)
+      map: @map
       icon:
         path: google.maps.SymbolPath.CIRCLE
         strokeWeight: 2
@@ -25,10 +37,7 @@ class window.Marker
         fillOpacity: Marker.initFillOpacity
         scale: @radius
     )
-
-    # Fadeout the marker
-    @fadeOutInterval = null
-    @start_animation(fps)
+  
   
   is_finished: ->
     if @active == false
@@ -38,6 +47,7 @@ class window.Marker
       return true
     else
       return false
+    
     
   deactivate: ->
     @active = false
@@ -50,19 +60,19 @@ class window.Marker
     # Tell the map that this marker is done, so the memory can be freed
     window.$map_div.trigger "remove_marker", this
     
+    
   start_animation: (fps) ->
     @start_animation_interval = setInterval ( =>
-      cur_time = Date.now()
-      
       # If done animating, remove
-      if cur_time > @finish_time
-        @deactivate()
-      else
-        @update_marker(cur_time)
+      unless @is_finished()
+        @update_marker()
         
     ), 1000 / fps
         
-  update_marker: (cur_time) ->
+        
+  update_marker: ->
+    cur_time = Date.now()
+    
     # Note, it looks nicer when the lighter fill color completely fades out first,
     # before the circle outline does
     @google_marker.setIcon(

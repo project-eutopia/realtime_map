@@ -65,33 +65,3 @@ class window.Marker
           scale: @radius
         )
     ), 1000 / fps
-
-  
-  # Returns true if finished, false if not
-  update: ->
-    if @active == false
-      return true
-    
-    ms_passed = Date.now() - @create_time
-     
-    # If done animating, remove
-    if ms_passed > Marker.lifetime_ms_default
-      @deactivate()
-      return true
-    # If ms_passed is negative, the marker is not yet to be displayed
-    else if ms_passed >= 0
-      @google_marker.setVisible(true)
-      # Note, it looks nicer when the lighter fill color completely fades out first,
-      # before the circle outline does
-      @google_marker.setIcon(
-        path: google.maps.SymbolPath.CIRCLE
-        strokeWeight: 2
-        strokeColor: @color
-        strokeOpacity: Marker.initStrokeOpacity * (Marker.lifetime_ms_default - ms_passed) / Marker.lifetime_ms_default
-        fillColor: @color
-        fillOpacity: Marker.initFillOpacity * Math.max(Marker.lifetime_ms_default - 1.4*ms_passed, 0) / Marker.lifetime_ms_default
-        scale: @radius
-      )
-      
-    return false
-      

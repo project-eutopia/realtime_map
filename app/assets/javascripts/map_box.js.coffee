@@ -42,7 +42,7 @@ class window.MapBox
       for marker in json
         do (marker) =>
           setTimeout ( =>
-            @markers[marker.id] = new Marker(marker, @map, @fps)
+            @markers[marker.id] = Marker.factory(marker, @map, @fps)
             console.log("Added new marker: " + @markers[marker.id])
           ), (@client_side_start_time + marker.delay_ms) - Date.now()
   

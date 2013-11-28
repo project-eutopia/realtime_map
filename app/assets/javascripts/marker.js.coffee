@@ -3,14 +3,21 @@ class window.Marker
   @initStrokeOpacity = 0.85
   @lifetime_ms_default = 4500
   
+  @factory: (json, map, fps) ->
+    if json.fradulent_score < 20
+      console.log("rect")
+      return new window.WarningMarker(json, map, fps)
+    else
+      return new window.Marker(json, map, fps)
+  
   constructor: (json, map, fps) ->
     @id = json.id
-    @lat = json.lat
-    @lng = json.lng
+    @lat = parseFloat(json.lat)
+    @lng = parseFloat(json.lng)
     @map = map
     
     @create_time = Date.now()
-    @finish_time = @create_time + Marker.lifetime_ms_default
+    @finish_time = @get_finish_time()
     
     @active = true
     @radius = json.radius
@@ -22,6 +29,10 @@ class window.Marker
     # Fadeout the marker
     @fadeOutInterval = null
     @start_animation(fps)
+    
+  
+  get_finish_time: ->
+    return @create_time + Marker.lifetime_ms_default
     
     
   get_google_marker: ->

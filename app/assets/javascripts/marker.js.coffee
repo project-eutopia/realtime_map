@@ -28,7 +28,7 @@ class window.Marker
 
     # Fadeout the marker
     @fadeOutInterval = null
-    @startFadeout(fps)
+    @start_animation(fps)
   
   is_finished: ->
     if @active == false
@@ -44,31 +44,34 @@ class window.Marker
     @google_marker.setMap(null)
     
     # Stop the fadeout loop
-    unless @startFadeoutInterval is null
-      clearInterval(@startFadeoutInterval)
+    unless @start_animation_interval is null
+      clearInterval(@start_animation_interval)
       
     # Tell the map that this marker is done, so the memory can be freed
     window.$map_div.trigger "remove_marker", this
     
-  startFadeout: (fps) ->
-    @startFadeoutInterval = setInterval ( =>
+  start_animation: (fps) ->
+    @start_animation_interval = setInterval ( =>
       cur_time = Date.now()
-     
+      
       # If done animating, remove
       if cur_time > @finish_time
         @deactivate()
-        
-      # Update opacity
       else
-        # Note, it looks nicer when the lighter fill color completely fades out first,
-        # before the circle outline does
-        @google_marker.setIcon(
-          path: google.maps.SymbolPath.CIRCLE
-          strokeWeight: 2
-          strokeColor: @color
-          strokeOpacity: Marker.initStrokeOpacity * (@finish_time - cur_time) / (@finish_time - @create_time)
-          fillColor: @color
-          fillOpacity: Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
-          scale: @radius
-        )
+        @update_marker(cur_time)
+        
     ), 1000 / fps
+        
+  update_marker: (cur_time) ->
+    # Note, it looks nicer when the lighter fill color completely fades out first,
+    # before the circle outline does
+    @google_marker.setIcon(
+      path: google.maps.SymbolPath.CIRCLE
+      strokeWeight: 2
+      strokeColor: @color
+      strokeOpacity: Marker.initStrokeOpacity * (@finish_time - cur_time) / (@finish_time - @create_time)
+      fillColor: @color
+      fillOpacity: Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
+      scale: @radius
+    )
+

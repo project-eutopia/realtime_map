@@ -79,7 +79,7 @@ class window.Marker
       path: google.maps.SymbolPath.CIRCLE
       strokeWeight: 2
       strokeColor: @color
-      strokeOpacity: Marker.initStrokeOpacity * (@finish_time - cur_time) / (@finish_time - @create_time)
+      strokeOpacity: Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
       fillColor: @color
       fillOpacity: Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
       scale: @radius

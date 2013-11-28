@@ -2,24 +2,30 @@
 # for displaying on the map, and the loop that updates the map and the database
 # check
 class window.MapBox
-  constructor: (div_id, initial_json) ->
+  constructor: (initial_json) ->
     @markers = {}
     @map = null
     
     @fps = initial_json["fps"]
 
-    @loadMap(div_id)
+    @loadMap()
     @client_side_start_time = Date.now()
+    
+    # This event called when a marker completely fades out, and needs to be removed
+    window.$map_div.on "remove_marker", (event, marker) =>
+      delete @markers[marker.id]
+      console.log("Removed marker with key = " + marker.id)
+    
     @add_markers(initial_json["markers"])
 
+    # This interval periodically will call the server for more data to display
     setInterval ( =>
       @get_recent_purchases()
-      @clear_old_markers()
     ), initial_json["seconds_between_calls"]*1000
     
   
   # Loads the Google map
-  loadMap: (div_id) ->
+  loadMap: ->
 
     mapOptions =
       zoom: 2
@@ -27,7 +33,7 @@ class window.MapBox
       mapTypeId: google.maps.MapTypeId.ROADMAP
 
     # Build the map
-    @map = new google.maps.Map(document.getElementById(div_id), mapOptions)
+    @map = new google.maps.Map(document.getElementById(window.map_div_id), mapOptions)
     
 
   # Adds markers specified by the JSON into the @markers hash
@@ -36,27 +42,11 @@ class window.MapBox
       for marker in json
         do (marker) =>
           setTimeout ( =>
-            @markers[marker.id] = new Marker(marker.lat, marker.lng, marker.radius, marker.color, @map, @fps)
+            @markers[marker.id] = new Marker(marker.id, marker.lat, marker.lng, marker.radius, marker.color, @map, @fps)
             console.log("Added new marker: " + @markers[marker.id])
           ), (@client_side_start_time + marker.delay_ms) - Date.now()
   
   
-  # Loops through all active markers and updates each's animation,
-  # cleaning up finished markers at the end
-  clear_old_markers: ->
-    # Record any markers that have finished animating for removal
-    finished_markers_keys = []
-    
-    for key, marker of @markers
-      if marker.is_finished()
-        finished_markers_keys.push(key)
-    
-    # Remove markers that have finished after the update loop
-    for key in finished_markers_keys
-      delete @markers[key]
-      console.log("Removed marker with key = " + key)
-      
-
   get_recent_purchases: ->
 
     $.ajax "/map/query.json",

@@ -3,7 +3,8 @@ class window.Marker
   @initStrokeOpacity = 0.85
   @lifetime_ms_default = 4500
   
-  constructor: (lat, lng, radius, color, map, fps) ->
+  constructor: (id, lat, lng, radius, color, map, fps) ->
+    @id = id
     @create_time = Date.now()
     @finish_time = @create_time + Marker.lifetime_ms_default
     
@@ -39,9 +40,14 @@ class window.Marker
     
   deactivate: ->
     @active = false
+    @google_marker.setMap(null)
+    
+    # Stop the fadeout loop
     unless @startFadeoutInterval is null
       clearInterval(@startFadeoutInterval)
-    @google_marker.setMap(null)
+      
+    # Tell the map that this marker is done, so the memory can be freed
+    window.$map_div.trigger "remove_marker", this
     
   startFadeout: (fps) ->
     @startFadeoutInterval = setInterval ( =>

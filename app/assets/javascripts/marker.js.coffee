@@ -4,7 +4,7 @@ class window.Marker
   @lifetime_ms_default = 4500
   
   @factory: (json, map, fps) ->
-    if json.fradulent_score < 20
+    if json.fradulent_score < 50
       console.log("rect")
       return new window.WarningMarker(json, map, fps)
     else

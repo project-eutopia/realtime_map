@@ -14,17 +14,29 @@ class window.WarningMarker extends window.Marker
     )
       
   get_bounds: ->
-    whole_bounds = @map.getBounds()
-    whole_bounds_ne = whole_bounds.getNorthEast()
-    whole_bounds_sw = whole_bounds.getSouthWest()
+    center = new google.maps.LatLng(@lat, @lng)
+    proj = @map.getProjection()
+    center_point = proj.fromLatLngToPoint(center)
+
+    map_bounds = @map.getBounds()
+    map_sw_point = proj.fromLatLngToPoint(map_bounds.getSouthWest())
+    map_ne_point = proj.fromLatLngToPoint(map_bounds.getNorthEast())
+
+    width  = map_ne_point.x - map_sw_point.x
+    height = map_sw_point.y - map_ne_point.y
+    long = if (width > height) then true else false
+    scale = Math.min(width, height) / 30.0
     
-    lat_size = (whole_bounds_ne.lat() - whole_bounds_sw.lat()) / 20.0
-    lng_size = (whole_bounds_ne.lng() - whole_bounds_sw.lng()) / 40.0
+    sw_point = new google.maps.Point(center_point.x - scale, center_point.y + scale)
+    ne_point = new google.maps.Point(center_point.x + scale, center_point.y - scale)
     
     @rect_bounds = new google.maps.LatLngBounds(
-      new google.maps.LatLng(@lat - lat_size, @lng - lng_size),
-      new google.maps.LatLng(@lat + lat_size, @lng + lng_size)
+      proj.fromPointToLatLng(sw_point),
+      proj.fromPointToLatLng(ne_point)
     )
+
+    return @rect_bounds
+    
   
   # Override
   get_finish_time: ->

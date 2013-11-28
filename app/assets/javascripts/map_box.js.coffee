@@ -34,7 +34,7 @@ class window.MapBox
 
     # Build the map
     @map = new google.maps.Map(document.getElementById(window.map_div_id), mapOptions)
-    
+   
 
   # Adds markers specified by the JSON into the @markers hash
   add_markers: (json) ->

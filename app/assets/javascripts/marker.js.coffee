@@ -11,6 +11,7 @@ class window.Marker
     @active = true
     @radius = json.radius
     @color = json.color
+    @fradulent_score = json.fradulent_score
     
     @google_marker = new google.maps.Marker(
       position: new google.maps.LatLng(json.lat, json.lng)

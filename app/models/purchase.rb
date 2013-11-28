@@ -21,6 +21,7 @@ class Purchase < ActiveRecord::Base
                    lat: rand(160)-80,
                    lng: rand(360)-180,
                    price: rand(40)+10,
+                   fradulent_score: rand(100),
                    store_id: rand(5))
     end
   end
@@ -40,6 +41,7 @@ class Purchase < ActiveRecord::Base
           radius: radius,
           store_id: store_id,
           color: color,
+          fradulent_score: fradulent_score,
           id: id}
   end
 end

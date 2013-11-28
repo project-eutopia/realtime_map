@@ -3,19 +3,17 @@ class window.WarningMarker extends window.Marker
 
   # Override
   get_google_marker: ->
-    return new google.maps.Rectangle(
+    @get_bounds()
+    
+    @google_marker = new google.maps.Rectangle(
       map: @map
       strokeWeight: 2
       strokeColor: @color
       strokeOpacity: window.Marker.initStrokeOpacity
       fillColor: @color
       fillOpacity: window.Marker.initFillOpacity
-      bounds: @get_bounds()
+      bounds: @rect_bounds
     )
-    
-    ## ADD LISTENER FOR INFOWINDOW
-    google.maps.event.addListener marker, "click", ->
-      infowindow.open map, marker
       
       
   get_bounds: ->
@@ -39,8 +37,6 @@ class window.WarningMarker extends window.Marker
       proj.fromPointToLatLng(sw_point),
       proj.fromPointToLatLng(ne_point)
     )
-
-    return @rect_bounds
     
   
   # Override

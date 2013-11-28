@@ -4,9 +4,11 @@ class window.Marker
   @lifetime_ms_default = 4500
   
   @factory: (json, map, fps) ->
-    if json.fradulent_score < 50
+    if json.fradulent_score < 30
       console.log("rect")
       return new window.WarningMarker(json, map, fps)
+    else if json.fradulent_score > 70
+      return new window.ErrorMarker(json, map, fps)
     else
       return new window.Marker(json, map, fps)
   
@@ -24,7 +26,7 @@ class window.Marker
     @color = json.color
     @fradulent_score = json.fradulent_score
     
-    @google_marker = @get_google_marker()
+    @get_google_marker()
 
     # Fadeout the marker
     @fadeOutInterval = null
@@ -36,7 +38,7 @@ class window.Marker
     
     
   get_google_marker: ->
-    return new google.maps.Marker(
+    @google_marker = new google.maps.Marker(
       position: new google.maps.LatLng(@lat, @lng)
       map: @map
       icon:

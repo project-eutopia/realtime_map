@@ -96,10 +96,6 @@ class window.ErrorMarker extends window.Marker
     false
   
   # Override
-  start_animation: (fps) ->
-    @start_animation_interval = null
-    
-  # Override
   update_marker: ->
     if @center_circle.getVisible()
       @center_circle.setVisible(false)

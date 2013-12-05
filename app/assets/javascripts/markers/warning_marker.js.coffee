@@ -1,6 +1,9 @@
 class window.WarningMarker extends window.Marker
   @lifetime_ms_default = 15000
 
+  constructor: (json, map, fps) ->
+    super(json, map, fps)
+  
   # Override
   get_google_marker: ->
     @get_bounds()

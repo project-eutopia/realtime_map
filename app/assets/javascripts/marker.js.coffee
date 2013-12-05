@@ -61,10 +61,12 @@ class window.Marker
     # Fadeout the marker
     @start_animation(fps)
     
-  
+
+  # abstract
   setup_markers: ->
     #
     
+  # abstract
   cleanup: ->
     #
 
@@ -73,9 +75,11 @@ class window.Marker
       @resize()
     )
 
+  # override, and call super()
   resize: ->
     @update_marker()
 
+  # abstract
   update_marker: ->
     #
 

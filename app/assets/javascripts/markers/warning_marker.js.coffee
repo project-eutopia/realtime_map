@@ -7,26 +7,29 @@ class window.WarningMarker extends window.Marker
   # Override
   setup_markers: ->
     @get_bounds()
-    @google_marker = new google.maps.Rectangle( @rectangle_options() )
+    @google_marker = new google.maps.Polygon( @polygon_options() )
       
-  rectangle_options: ->
+  polygon_options: ->
     cur_time = Date.now()
 
     map: @map
+    paths: @rect_coords
     strokeWeight: 2
     strokeColor: @color
     strokeOpacity: window.Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
     fillColor: @color
     fillOpacity: window.Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
-    bounds: @rect_bounds
+
     
   # Need to recalculate the rectangle bounds after resize
   resize: ->
     @get_bounds()
+    @update_marker()
     super()
       
       
   get_bounds: ->
+  
     center = new google.maps.LatLng(@lat, @lng)
     proj = @map.getProjection()
     center_point = proj.fromLatLngToPoint(center)
@@ -40,13 +43,18 @@ class window.WarningMarker extends window.Marker
     long = if (width > height) then true else false
     scale = Math.min(width, height) / 30.0
     
-    sw_point = new google.maps.Point(center_point.x - scale, center_point.y + scale)
-    ne_point = new google.maps.Point(center_point.x + scale, center_point.y - scale)
+    latlng_ur = proj.fromPointToLatLng(new google.maps.Point(center_point.x + scale, center_point.y - scale))
+    latlng_ul = proj.fromPointToLatLng(new google.maps.Point(center_point.x - scale, center_point.y - scale))
+    latlng_dl = proj.fromPointToLatLng(new google.maps.Point(center_point.x - scale, center_point.y + scale))
+    latlng_dr = proj.fromPointToLatLng(new google.maps.Point(center_point.x + scale, center_point.y + scale))
     
-    @rect_bounds = new google.maps.LatLngBounds(
-      proj.fromPointToLatLng(sw_point),
-      proj.fromPointToLatLng(ne_point)
-    )
+    @rect_coords = [
+      latlng_ur,
+      latlng_ul,
+      latlng_dl,
+      latlng_dr,
+      latlng_ur
+    ]
     
   # Override
   cleanup: ->
@@ -62,5 +70,5 @@ class window.WarningMarker extends window.Marker
   # Override
   update_marker: ->
     if @google_marker
-      @google_marker.setOptions( @rectangle_options() )
+      @google_marker.setOptions( @polygon_options() )
 

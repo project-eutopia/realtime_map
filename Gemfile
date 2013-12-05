@@ -32,6 +32,9 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+# Geocoder for converting addresses/IP to latitude/longitude
+gem "geocoder"
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

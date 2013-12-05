@@ -67,14 +67,15 @@ class window.Marker
       
       @cleanup()
       
+      # Stop the fadeout loop
+      unless @start_animation_interval is null
+        clearInterval(@start_animation_interval)
+      
       # Tell the map that this marker is done, so the memory can be freed
       window.$map_div.trigger "remove_marker", this
   
   cleanup: ->
     @google_marker.setMap(null)
-    # Stop the fadeout loop
-    unless @start_animation_interval is null
-      clearInterval(@start_animation_interval)
 
     
   start_animation: (fps) ->

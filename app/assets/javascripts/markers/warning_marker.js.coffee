@@ -2,6 +2,10 @@ class window.WarningMarker extends window.Marker
   @lifetime_ms_default = 15000
 
   constructor: (json, map, fps) ->
+    @resize_listener = google.maps.event.addListener(map, 'zoom_changed', =>
+      @cleanup()
+      @get_google_marker()
+    )
     super(json, map, fps)
   
   # Override
@@ -41,7 +45,14 @@ class window.WarningMarker extends window.Marker
       proj.fromPointToLatLng(ne_point)
     )
     
-  
+  # Override
+  cleanup: ->
+    # Remove the resize_listener
+    @resize_listener.remove()
+    
+    # The rest of the cleanup is handled by the superclass
+    super()
+
   # Override
   get_finish_time: ->
     @create_time + WarningMarker.lifetime_ms_default

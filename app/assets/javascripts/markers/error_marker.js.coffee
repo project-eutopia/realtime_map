@@ -4,24 +4,11 @@ class window.ErrorMarker extends window.Marker
   setup_markers: ->
     @get_bounds()
     
-    @google_marker = new google.maps.Polygon(
-      map: @map
-      paths: @diamond_coords
-      strokeWeight: 2
-      strokeColor: "#FF0000"
-      strokeOpacity: window.Marker.initStrokeOpacity
-      fillColor: @color
-      fillOpacity: window.Marker.initFillOpacity
-    )
+    @google_marker = new google.maps.Polygon( @polygon_options() )
     @center_circle = new google.maps.Marker(
       position: new google.maps.LatLng(@lat, @lng)
       map: @map
-      icon:
-        path: google.maps.SymbolPath.CIRCLE
-        strokeWeight: 4
-        strokeColor: "#FF0000"
-        strokeOpacity: Marker.initStrokeOpacity
-        scale: 2
+      icon: @circle_icon()
     )
     
     # Create info window for display once clicked
@@ -50,6 +37,27 @@ class window.ErrorMarker extends window.Marker
       @deactivate()
       
       
+  resize: ->
+    @get_bounds()
+    @google_marker.setOptions( @polygon_options() )
+  
+  polygon_options: ->
+    map: @map
+    paths: @diamond_coords
+    strokeWeight: 2
+    strokeColor: "#FF0000"
+    strokeOpacity: window.Marker.initStrokeOpacity
+    fillColor: @color
+    fillOpacity: window.Marker.initFillOpacity
+    
+  circle_icon: ->
+    path: google.maps.SymbolPath.CIRCLE
+    strokeWeight: 4
+    strokeColor: "#FF0000"
+    strokeOpacity: Marker.initStrokeOpacity
+    scale: 2
+
+
   cleanup: ->
     # Close down the parts of this marker unique to it
     @center_circle.setMap(null)

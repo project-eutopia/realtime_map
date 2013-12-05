@@ -86,6 +86,8 @@ class window.Marker
       # Stop the fadeout loop
       unless @start_animation_interval is null
         clearInterval(@start_animation_interval)
+        
+      @resize_listener.remove()
       
       # Tell the map that this marker is done, so the memory can be freed
       window.$map_div.trigger "remove_marker", this

@@ -7,16 +7,23 @@ class window.WarningMarker extends window.Marker
   # Override
   setup_markers: ->
     @get_bounds()
+    @google_marker = new google.maps.Rectangle( @rectangle_options() )
+      
+  rectangle_options: ->
+    cur_time = Date.now()
+
+    map: @map
+    strokeWeight: 2
+    strokeColor: @color
+    strokeOpacity: window.Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
+    fillColor: @color
+    fillOpacity: window.Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
+    bounds: @rect_bounds
     
-    @google_marker = new google.maps.Rectangle(
-      map: @map
-      strokeWeight: 2
-      strokeColor: @color
-      strokeOpacity: window.Marker.initStrokeOpacity
-      fillColor: @color
-      fillOpacity: window.Marker.initFillOpacity
-      bounds: @rect_bounds
-    )
+  # Need to recalculate the rectangle bounds after resize
+  resize: ->
+    @get_bounds()
+    super()
       
       
   get_bounds: ->
@@ -55,18 +62,6 @@ class window.WarningMarker extends window.Marker
     
   # Override
   update_marker: ->
-    cur_time = Date.now()
-    
-    # Note, it looks nicer when the lighter fill color completely fades out first,
-    # before the circle outline does
     if @google_marker
-      @google_marker.setOptions(
-        map: @map
-        strokeWeight: 2
-        strokeColor: @color
-        strokeOpacity: window.Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
-        fillColor: @color
-        fillOpacity: window.Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
-        bounds: @rect_bounds
-      )
+      @google_marker.setOptions( @rectangle_options() )
 

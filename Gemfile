@@ -35,6 +35,9 @@ end
 # Geocoder for converting addresses/IP to latitude/longitude
 gem "geocoder"
 
+# Caching
+gem "dalli"
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

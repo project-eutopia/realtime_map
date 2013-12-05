@@ -24,16 +24,40 @@ class window.ErrorMarker extends window.Marker
         scale: 2
     )
     
-    ## ADD LISTENER FOR INFOWINDOW
-    infowindow = new google.maps.InfoWindow(
-      content: "<p>hellooooooooooo world " + @id + "</p>"
+    # Create info window for display once clicked
+    @info_string = $( '<div class="error-marker-info">'+
+                      '<p>Error with marker!</p>'+
+                      '<p>Id = ' + @id + '</p>'+
+                      '<br>'+
+                      '<button class=\"error-info-button\" id=\"error-info-button-'+@id+'\" title=\"Remove Marker\">'+
+                        'Remove Marker'+
+                      '</button>'+
+                      '</div>' )
+    @infowindow = new google.maps.InfoWindow(
+      content: @info_string[0]
       disableAutoPan: true
     )
+    
+    # Open info window when clicked
     google.maps.event.addListener(@google_marker, 'click', =>
-      infowindow.open(@map, @center_circle)
+      @infowindow.open(@map, @center_circle)
     )
+    
+    # Add listener for the remove marker button
+    removeBtn = @info_string.find("#error-info-button-"+@id+"")[0]
+    google.maps.event.addDomListener removeBtn, "click", (event) =>
+      event.preventDefault()
+      @deactivate()
       
       
+  deactivate: ->
+    # Close down the parts of this marker unique to it
+    @center_circle.setMap(null)
+    @infowindow.close()
+    
+    # The rest of the cleanup is handled by the superclass
+    super()
+    
   get_bounds: ->
   
     center = new google.maps.LatLng(@lat, @lng)

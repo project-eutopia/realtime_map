@@ -7,7 +7,7 @@ class window.Marker
     if json.fradulent_score < 30
       console.log("rect")
       return new window.WarningMarker(json, map, fps)
-    else if json.fradulent_score > 70
+    else if json.fradulent_score > 80
       return new window.ErrorMarker(json, map, fps)
     else
       return new window.Marker(json, map, fps)

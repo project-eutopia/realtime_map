@@ -8,3 +8,6 @@ $(document).ready ->
   window.$map_div = $( "#"+window.map_div_id )
   
   window.box = new window.MapBox(window.data_json)
+
+loadContent: ->
+  alert 'hi'

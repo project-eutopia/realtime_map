@@ -2,14 +2,10 @@ class window.WarningMarker extends window.Marker
   @lifetime_ms_default = 15000
 
   constructor: (json, map, fps) ->
-    @resize_listener = google.maps.event.addListener(map, 'zoom_changed', =>
-      @cleanup()
-      @get_google_marker()
-    )
     super(json, map, fps)
-  
+
   # Override
-  get_google_marker: ->
+  setup_markers: ->
     @get_bounds()
     
     @google_marker = new google.maps.Rectangle(
@@ -63,13 +59,14 @@ class window.WarningMarker extends window.Marker
     
     # Note, it looks nicer when the lighter fill color completely fades out first,
     # before the circle outline does
-    @google_marker.setOptions(
-      map: @map
-      strokeWeight: 2
-      strokeColor: @color
-      strokeOpacity: window.Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
-      fillColor: @color
-      fillOpacity: window.Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
-      bounds: @rect_bounds
-    )
+    if @google_marker
+      @google_marker.setOptions(
+        map: @map
+        strokeWeight: 2
+        strokeColor: @color
+        strokeOpacity: window.Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
+        fillColor: @color
+        fillOpacity: window.Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
+        bounds: @rect_bounds
+      )
 

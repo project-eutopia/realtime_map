@@ -25,30 +25,46 @@ class window.Marker
     @color = json.color
     @fradulent_score = json.fradulent_score
     
-    @get_google_marker()
+    @setup_markers()
+    @set_resize_listener()
 
     # Fadeout the marker
     @fadeOutInterval = null
     @start_animation(fps)
     
   
+  set_resize_listener: ->
+    @resize_listener = google.maps.event.addListener(@map, 'zoom_changed', =>
+      @resize()
+    )
+
+  resize: ->
+    @update_marker()
+
+  
   get_finish_time: ->
     return @create_time + Marker.lifetime_ms_default
     
     
-  get_google_marker: ->
+  setup_markers: ->
     @google_marker = new google.maps.Marker(
       position: new google.maps.LatLng(@lat, @lng)
       map: @map
-      icon:
-        path: google.maps.SymbolPath.CIRCLE
-        strokeWeight: 2
-        strokeColor: @color
-        strokeOpacity: Marker.initStrokeOpacity
-        fillColor: @color
-        fillOpacity: Marker.initFillOpacity
-        scale: @radius
+      icon: @marker_icon()
     )
+    
+  marker_icon: ->
+    # Note, it looks nicer when the lighter fill color completely fades out first,
+    # before the circle outline does
+    cur_time = Date.now()
+    
+    path: google.maps.SymbolPath.CIRCLE
+    strokeWeight: 2
+    strokeColor: @color
+    strokeOpacity: Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
+    fillColor: @color
+    fillOpacity: Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
+    scale: @radius
   
   
   is_finished: ->
@@ -88,17 +104,6 @@ class window.Marker
         
         
   update_marker: ->
-    cur_time = Date.now()
-    
-    # Note, it looks nicer when the lighter fill color completely fades out first,
-    # before the circle outline does
-    @google_marker.setIcon(
-      path: google.maps.SymbolPath.CIRCLE
-      strokeWeight: 2
-      strokeColor: @color
-      strokeOpacity: Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
-      fillColor: @color
-      fillOpacity: Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
-      scale: @radius
-    )
+    if @google_marker
+      @google_marker.setIcon( @marker_icon() )
 

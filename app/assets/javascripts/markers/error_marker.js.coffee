@@ -1,7 +1,7 @@
 class window.ErrorMarker extends window.Marker
 
   # Override
-  get_google_marker: ->
+  setup_markers: ->
     @get_bounds()
     
     @google_marker = new google.maps.Polygon(
@@ -106,7 +106,8 @@ class window.ErrorMarker extends window.Marker
     
   # Override
   update_marker: ->
-    if @center_circle.getVisible()
-      @center_circle.setVisible(false)
-    else
-      @center_circle.setVisible(true)
+    if @center_circle
+      if @center_circle.getVisible()
+        @center_circle.setVisible(false)
+      else
+        @center_circle.setVisible(true)

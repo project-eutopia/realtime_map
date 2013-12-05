@@ -50,10 +50,9 @@ class window.WarningMarker extends window.Marker
     
   # Override
   cleanup: ->
+    @google_marker.setMap(null)
     # Remove the resize_listener
     @resize_listener.remove()
-    
-    # The rest of the cleanup is handled by the superclass
     super()
 
   # Override

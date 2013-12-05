@@ -60,10 +60,9 @@ class window.ErrorMarker extends window.Marker
 
   cleanup: ->
     # Close down the parts of this marker unique to it
+    @google_marker.setMap(null)
     @center_circle.setMap(null)
     @infowindow.close()
-    
-    # The rest of the cleanup is handled by the superclass
     super()
     
   get_bounds: ->

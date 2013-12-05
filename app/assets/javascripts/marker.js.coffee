@@ -9,7 +9,7 @@ class window.Marker
     else if json.fradulent_score > 80
       return new window.ErrorMarker(json, map, fps)
     else
-      return new window.Marker(json, map, fps)
+      return new window.BasicMarker(json, map, fps)
   
   constructor: (json, map, fps) ->
     @id = json.id
@@ -29,7 +29,6 @@ class window.Marker
     @set_resize_listener()
 
     # Fadeout the marker
-    @fadeOutInterval = null
     @start_animation(fps)
     
   
@@ -47,26 +46,8 @@ class window.Marker
     
     
   setup_markers: ->
-    @google_marker = new google.maps.Marker(
-      position: new google.maps.LatLng(@lat, @lng)
-      map: @map
-      icon: @marker_icon()
-    )
+    #
     
-  marker_icon: ->
-    # Note, it looks nicer when the lighter fill color completely fades out first,
-    # before the circle outline does
-    cur_time = Date.now()
-    
-    path: google.maps.SymbolPath.CIRCLE
-    strokeWeight: 2
-    strokeColor: @color
-    strokeOpacity: Marker.initStrokeOpacity * Math.max(@finish_time - cur_time, 0) / (@finish_time - @create_time)
-    fillColor: @color
-    fillOpacity: Marker.initFillOpacity * Math.max((@finish_time-@create_time) - 1.4*(cur_time-@create_time), 0) / (@finish_time - @create_time)
-    scale: @radius
-  
-  
   is_finished: ->
     if @active == false
       return true
@@ -84,7 +65,7 @@ class window.Marker
       @cleanup()
       
       # Stop the fadeout loop
-      unless @start_animation_interval is null
+      if @start_animation_interval
         clearInterval(@start_animation_interval)
         
       @resize_listener.remove()
@@ -93,7 +74,7 @@ class window.Marker
       window.$map_div.trigger "remove_marker", this
   
   cleanup: ->
-    @google_marker.setMap(null)
+    #
 
     
   start_animation: (fps) ->
@@ -106,6 +87,5 @@ class window.Marker
         
         
   update_marker: ->
-    if @google_marker
-      @google_marker.setIcon( @marker_icon() )
+    #
 

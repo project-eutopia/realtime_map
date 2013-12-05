@@ -95,6 +95,15 @@ class window.ErrorMarker extends window.Marker
   is_finished: ->
     false
   
+  # Override (ignore the FPS, and have a slowish blink)
+  start_animation: (fps) ->
+    @start_animation_interval = setInterval ( =>
+      # If done animating, remove
+      unless @is_finished()
+        @update_marker()
+        
+    ), 200
+    
   # Override
   update_marker: ->
     if @center_circle.getVisible()

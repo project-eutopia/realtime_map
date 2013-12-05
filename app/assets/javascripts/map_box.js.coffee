@@ -12,6 +12,7 @@ class window.MapBox
     @client_side_start_time = Date.now()
     
     # This event called when a marker completely fades out, and needs to be removed
+    # This deleting is called by the Marker when deactivate is called
     window.$map_div.on "remove_marker", (event, marker) =>
       delete @markers[marker.id]
       console.log("Removed marker with key = " + marker.id)
@@ -33,10 +34,13 @@ class window.MapBox
     
   
   remove_error_markers: ->
-    #
+    for key, marker of @markers
+      if marker instanceof window.ErrorMarker
+        marker.deactivate()
     
   remove_all_markers: ->
-    #
+    for key, marker of @markers
+      marker.deactivate()
   
   # Loads the Google map
   loadMap: ->

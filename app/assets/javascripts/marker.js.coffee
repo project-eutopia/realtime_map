@@ -1,3 +1,33 @@
+# This is the base class that all Markers will inherit from.
+# The following are a list of all methods that should be overriden by subclasses
+#
+# setup_markers():
+#   Called in the constructor. Create any google marker objects your Marker will
+#   use here.
+#
+# cleanup():
+#   Called from deactivate() when the Marker is to be removed.  Clean up any
+#   markers that were created in setup_markers() here.
+#
+# resize():
+#   This is called whenever the map is resized.  In here you should recalculate
+#   bounds or sizes needed for markers when the map size changes.
+#
+# update_marker():
+#   This is called every animation frame.  Use it to implement fadeouts, blinking,
+#   and other changes.  The instance variables @create_time and @finish_time
+#   are used to denote start and finish of the animation.
+#
+# get_finish_time():
+#   This is called to determine the time the animation will finish.  It is called
+#   after seting @create_time.  Can override to give custom @finish_time value
+#   that is used in the method is_finished()
+#
+# is_finished():
+#   Can set custom finish criteria here.  The animation loop created in
+#   start_animation will call is_finished().  The default is_finished() code
+#   calls deactivate() when the animation finishes, to start cleanup of the class
+
 class window.Marker
   @initFillOpacity = 0.40
   @initStrokeOpacity = 0.85
@@ -32,6 +62,12 @@ class window.Marker
     @start_animation(fps)
     
   
+  setup_markers: ->
+    #
+    
+  cleanup: ->
+    #
+
   set_resize_listener: ->
     @resize_listener = google.maps.event.addListener(@map, 'zoom_changed', =>
       @resize()
@@ -40,13 +76,12 @@ class window.Marker
   resize: ->
     @update_marker()
 
-  
+  update_marker: ->
+    #
+
   get_finish_time: ->
     return @create_time + Marker.lifetime_ms_default
     
-    
-  setup_markers: ->
-    #
     
   is_finished: ->
     if @active == false
@@ -57,7 +92,8 @@ class window.Marker
     else
       return false
     
-    
+  
+  
   deactivate: ->
     if @active
       @active = false
@@ -73,8 +109,6 @@ class window.Marker
       # Tell the map that this marker is done, so the memory can be freed
       window.$map_div.trigger "remove_marker", this
   
-  cleanup: ->
-    #
 
     
   start_animation: (fps) ->
@@ -86,6 +120,4 @@ class window.Marker
     ), 1000 / fps
         
         
-  update_marker: ->
-    #
 

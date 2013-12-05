@@ -1,4 +1,8 @@
 class Purchase < ActiveRecord::Base
+  
+  geocoded_by :address, :latitude  => :lat, :longitude => :lng
+  #after_validation :geocode
+  
   COLORS = ['#FF2222', '#DDDD00', '#00BB22', '#000099', '#6644DD']
   DEFAULT_MAX_RECENT_PURCHASES = 100
   
@@ -14,15 +18,19 @@ class Purchase < ActiveRecord::Base
     
     # Dummy data
     (1..params[:limit]).collect do |i|
-      Purchase.new(id: rand(9999999),
+      purchase = Purchase.new(id: rand(9999999),
                    name: "Name-#{rand(9999)}",
                    session_start_time: params[:start_time],
                    purchase_time: params[:query_time] + params[:seconds]*rand(1000)/1000.0,
+                   address: "",
                    lat: rand(160)-80,
                    lng: rand(360)-180,
                    price: rand(40)+10,
                    fradulent_score: rand(100),
                    store_id: rand(5))
+      # Can call geocode
+      #purchase.geocode
+      purchase
     end
   end
   
@@ -42,6 +50,7 @@ class Purchase < ActiveRecord::Base
           store_id: store_id,
           color: color,
           fradulent_score: fradulent_score,
+          address: address,
           id: id}
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131128032044) do
+ActiveRecord::Schema.define(version: 20131205065838) do
 
   create_table "purchases", force: true do |t|
     t.string   "name"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20131128032044) do
     t.datetime "purchase_time"
     t.datetime "session_start_time"
     t.decimal  "fradulent_score"
+    t.string   "address"
   end
 
 end

@@ -15,6 +15,14 @@ class window.MapBox
     window.$map_div.on "remove_marker", (event, marker) =>
       delete @markers[marker.id]
       console.log("Removed marker with key = " + marker.id)
+      
+    # Get various buttons
+    $( ".remove-error-markers" ).on( "click", =>
+      @remove_error_markers()
+    )
+    $( ".remove-all-markers" ).on( "click", =>
+      @remove_all_markers()
+    )
     
     @add_markers(initial_json["markers"])
 
@@ -23,6 +31,12 @@ class window.MapBox
       @get_recent_purchases()
     ), initial_json["seconds_between_calls"]*1000
     
+  
+  remove_error_markers: ->
+    #
+    
+  remove_all_markers: ->
+    #
   
   # Loads the Google map
   loadMap: ->

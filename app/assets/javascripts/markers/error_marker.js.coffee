@@ -50,7 +50,7 @@ class window.ErrorMarker extends window.Marker
       @deactivate()
       
       
-  deactivate: ->
+  cleanup: ->
     # Close down the parts of this marker unique to it
     @center_circle.setMap(null)
     @infowindow.close()
@@ -90,9 +90,14 @@ class window.ErrorMarker extends window.Marker
   # Override
   get_finish_time: ->
     Infinity
-    
+  
+  # Override
   is_finished: ->
     false
+  
+  # Override
+  start_animation: (fps) ->
+    @start_animation_interval = null
     
   # Override
   update_marker: ->

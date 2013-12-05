@@ -5,7 +5,6 @@ class window.Marker
   
   @factory: (json, map, fps) ->
     if json.fradulent_score < 30
-      console.log("rect")
       return new window.WarningMarker(json, map, fps)
     else if json.fradulent_score > 80
       return new window.ErrorMarker(json, map, fps)
@@ -63,16 +62,20 @@ class window.Marker
     
     
   deactivate: ->
-    @active = false
+    if @active
+      @active = false
+      
+      @cleanup()
+      
+      # Tell the map that this marker is done, so the memory can be freed
+      window.$map_div.trigger "remove_marker", this
+  
+  cleanup: ->
     @google_marker.setMap(null)
-    
     # Stop the fadeout loop
     unless @start_animation_interval is null
       clearInterval(@start_animation_interval)
-      
-    # Tell the map that this marker is done, so the memory can be freed
-    window.$map_div.trigger "remove_marker", this
-    
+
     
   start_animation: (fps) ->
     @start_animation_interval = setInterval ( =>

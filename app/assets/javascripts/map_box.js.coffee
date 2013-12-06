@@ -16,7 +16,7 @@ class window.MapBox
     # This deleting is called by the Marker when deactivate is called
     window.$map_div.on "remove_marker", (event, marker) =>
       delete @markers[marker.id]
-      console.log("Removed marker with key = " + marker.id)
+      console.debug("Removed marker with key = " + marker.id)
       
     # Get various buttons
     $( ".remove-error-markers" ).on( "click", =>
@@ -79,10 +79,10 @@ class window.MapBox
     $.ajax "/map/query.json",
       type: "GET"
       success: (data, status, xhr) =>
-        console.log("AJAX, received new JSON data")
+        console.debug("AJAX, received new JSON data")
         @add_markers(data["markers"])
       error: (xhr, status, error) =>
-        console.log(xhr)
+        console.error(xhr)
         alert(error)
       #data:
         #last_query: @last_query_time

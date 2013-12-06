@@ -7,6 +7,7 @@ class window.MapBox
     @map = null
     
     @fps = initial_json["fps"]
+    @max_markers = initial_json["max_markers"]
 
     @loadMap()
     @client_side_start_time = Date.now()
@@ -57,13 +58,21 @@ class window.MapBox
   # Adds markers specified by the JSON into the @markers hash
   add_markers: (json) ->
     if @map != null
-      for marker in json
-        do (marker) =>
+      for marker_json in json
+        # Enclosure
+        do (marker_json) =>
           setTimeout ( =>
-            @markers[marker.id] = Marker.factory(marker, @map, @fps)
-            console.log("Added new marker: " + @markers[marker.id])
-          ), (@client_side_start_time + marker.delay_ms) - Date.now()
+            @add_marker(marker_json)
+          ), (@client_side_start_time + marker_json.delay_ms) - Date.now()
   
+  
+  add_marker: (marker_json) ->
+    if Object.keys(@markers).length < @max_markers
+      @markers[marker_json.id] = Marker.factory(marker_json, @map, @fps)
+      console.debug("Added new marker: " + @markers[marker_json.id])
+    else
+      console.warn("LIMIT!  Couldn't add new marker.  Current size = " + Object.keys(@markers).length)
+    
   
   get_recent_purchases: ->
 

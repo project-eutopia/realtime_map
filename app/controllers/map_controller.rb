@@ -5,6 +5,8 @@ class MapController < ApplicationController
   REGULAR_QUERY_LENGTH_IN_SECONDS = 30
   DEFAULT_ANIMATION_FPS = 15
   
+  MAX_NUMBER_OF_MARKERS = 75
+  
   MAX_NUMBER_OF_PURCHASES_PER_CALL = 100
   
   # map/index GET
@@ -21,6 +23,7 @@ class MapController < ApplicationController
     
     @data = {:seconds_between_calls => REGULAR_QUERY_LENGTH_IN_SECONDS,
              :fps => DEFAULT_ANIMATION_FPS,
+             :max_markers => MAX_NUMBER_OF_MARKERS,
              :markers => @purchases.collect{ |p| p.circle_data } }
     respond_to do |format|
       format.html

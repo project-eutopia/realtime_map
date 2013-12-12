@@ -12,9 +12,30 @@ class Purchase < ActiveRecord::Base
   # params[:query_time] = Time.now() for the start of the current query
   # params[:seconds] = number of seconds of recent data to pull
   # params[:limit] = maximum number of Purchases to return (optional)
-  def self.recent(params)
+  def self.recent_marker_data(params)
     # Hash default values
     params.reverse_merge!( limit: DEFAULT_MAX_RECENT_PURCHASES )
+    
+    purchases = Purchase.recent(params)
+    
+    return purchases.collect{ |p| p.marker_data }
+  end
+  
+  def marker_data
+    return {lng: lng,
+          lat: lat,
+          delay_ms: 1000*(purchase_time - session_start_time),
+          radius: radius,
+          store_id: store_id,
+          color: color,
+          marker_name: marker_name,
+          address: address,
+          id: id}
+  end
+  
+  private
+  
+  def self.recent(params)
     
     # Dummy data
     (1..params[:limit]).collect do |i|
@@ -56,15 +77,4 @@ class Purchase < ActiveRecord::Base
     end
   end
   
-  def circle_data
-    return {lng: lng,
-          lat: lat,
-          delay_ms: 1000*(purchase_time - session_start_time),
-          radius: radius,
-          store_id: store_id,
-          color: color,
-          marker_name: marker_name,
-          address: address,
-          id: id}
-  end
 end

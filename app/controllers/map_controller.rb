@@ -16,15 +16,16 @@ class MapController < ApplicationController
     session[:start_time] = Time.now() - FIRST_QUERY_LENGTH_IN_SECONDS
     session[:query_time] = session[:start_time]
 
-    @purchases = Purchase.recent(seconds: FIRST_QUERY_LENGTH_IN_SECONDS,
-                                 limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
-                                 start_time: session[:start_time],
-                                 query_time: session[:query_time])
+    @marker_data = Purchase.recent_marker_data(seconds: FIRST_QUERY_LENGTH_IN_SECONDS,
+                                               limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
+                                               start_time: session[:start_time],
+                                              query_time: session[:query_time])
     
     @data = {:seconds_between_calls => REGULAR_QUERY_LENGTH_IN_SECONDS,
              :fps => DEFAULT_ANIMATION_FPS,
              :max_markers => MAX_NUMBER_OF_MARKERS,
-             :markers => @purchases.collect{ |p| p.circle_data } }
+             :markers => @marker_data }
+    
     respond_to do |format|
       format.html
     end
@@ -33,12 +34,13 @@ class MapController < ApplicationController
   # map/query GET
   def query
     session[:query_time] = Time.now() - REGULAR_QUERY_LENGTH_IN_SECONDS
-    @purchases = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
+    
+    @marker_data = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
                                  limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
                                  start_time: session[:start_time],
                                  query_time: session[:query_time])
     
-    @data = {:markers => @purchases.collect{ |p| p.circle_data } }
+    @data = {:markers => @marker_data }
     
     respond_to do |format|
       format.json { render :json => @data.to_json }

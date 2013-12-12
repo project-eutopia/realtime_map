@@ -26,13 +26,13 @@ class window.ErrorMarker extends window.Marker
     )
     
     # Open info window when clicked
-    google.maps.event.addListener(@google_marker, 'click', =>
+    @marker_click_listener = google.maps.event.addListener(@google_marker, 'click', =>
       @infowindow.open(@map, @center_circle)
     )
     
     # Add listener for the remove marker button
     removeBtn = @info_string.find("#error-info-button-"+@id+"")[0]
-    google.maps.event.addDomListener removeBtn, "click", (event) =>
+    @info_button_listener = google.maps.event.addDomListener removeBtn, "click", (event) =>
       event.preventDefault()
       @deactivate()
       
@@ -63,6 +63,8 @@ class window.ErrorMarker extends window.Marker
     @google_marker.setMap(null)
     @center_circle.setMap(null)
     @infowindow.close()
+    google.maps.event.removeListener(@info_button_listener)
+    google.maps.event.removeListener(@marker_click_listener)
     super()
     
   get_bounds: ->

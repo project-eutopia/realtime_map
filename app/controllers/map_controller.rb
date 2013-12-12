@@ -1,8 +1,8 @@
 class MapController < ApplicationController
   # Number of seconds of recent purchase data that should be
   # gotten on a first load, and subsequent calls
-  FIRST_QUERY_LENGTH_IN_SECONDS = 60
-  REGULAR_QUERY_LENGTH_IN_SECONDS = 30
+  FIRST_QUERY_LENGTH_IN_SECONDS = 20
+  REGULAR_QUERY_LENGTH_IN_SECONDS = 10
   DEFAULT_ANIMATION_FPS = 15
   
   MAX_NUMBER_OF_MARKERS = 75
@@ -35,10 +35,10 @@ class MapController < ApplicationController
   def query
     session[:query_time] = Time.now() - REGULAR_QUERY_LENGTH_IN_SECONDS
     
-    @marker_data = Purchase.recent(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
-                                 limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
-                                 start_time: session[:start_time],
-                                 query_time: session[:query_time])
+    @marker_data = Purchase.recent_marker_data(seconds: REGULAR_QUERY_LENGTH_IN_SECONDS,
+                                               limit: MAX_NUMBER_OF_PURCHASES_PER_CALL,
+                                               start_time: session[:start_time],
+                                               query_time: session[:query_time])
     
     @data = {:markers => @marker_data }
     

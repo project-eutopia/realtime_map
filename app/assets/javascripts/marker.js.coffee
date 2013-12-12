@@ -36,6 +36,7 @@ class window.Marker
   @lifetime_ms_default = 4500
   
   @factory: (json, map, fps) ->
+    console.debug(json.marker_name)
     return new window.marker_class_list[json.marker_name](json, map, fps)
   
   constructor: (json, map, fps) ->

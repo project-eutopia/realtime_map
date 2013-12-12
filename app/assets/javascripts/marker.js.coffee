@@ -28,18 +28,18 @@
 #   start_animation will call is_finished().  The default is_finished() code
 #   calls deactivate() when the animation finishes, to start cleanup of the class
 
+
+
 class window.Marker
   @initFillOpacity = 0.40
   @initStrokeOpacity = 0.85
   @lifetime_ms_default = 4500
   
   @factory: (json, map, fps) ->
-    if json.fradulent_score < 30
-      return new window.WarningMarker(json, map, fps)
-    else if json.fradulent_score > 80
-      return new window.ErrorMarker(json, map, fps)
-    else
-      return new window.BasicMarker(json, map, fps)
+    console.debug(json.marker_name)
+    console.debug(window.marker_class_list)
+    console.debug(window.marker_class_list[json.marker_name])
+    return new window.marker_class_list[json.marker_name](json, map, fps)
   
   constructor: (json, map, fps) ->
     @id = json.id

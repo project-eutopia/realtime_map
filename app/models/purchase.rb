@@ -42,6 +42,20 @@ class Purchase < ActiveRecord::Base
     COLORS[store_id]
   end
   
+  def marker_name
+    if fradulent_score
+      if fradulent_score < 10
+        "ErrorMarker"
+      elsif fradulent_score < 35
+        "WarningMarker"
+      else
+        "BasicMarker"
+      end
+    else
+      "BasicMarker"
+    end
+  end
+  
   def circle_data
     return {lng: lng,
           lat: lat,
@@ -49,7 +63,7 @@ class Purchase < ActiveRecord::Base
           radius: radius,
           store_id: store_id,
           color: color,
-          fradulent_score: fradulent_score,
+          marker_name: marker_name,
           address: address,
           id: id}
   end
